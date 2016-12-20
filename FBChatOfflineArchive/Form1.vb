@@ -1,5 +1,7 @@
-﻿Public Class LoginForm
+﻿Imports MySql.Data.MySqlClient
+Public Class LoginForm
 
+    Public AssumeWindowMove As Boolean = False
     Private Sub LoginForm_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         Me.FormBorderStyle = Windows.Forms.FormBorderStyle.None
 
@@ -32,5 +34,43 @@
         If txtPassword.Text = "" Then
             txtPassword.Text = "Password"
         End If
+    End Sub
+
+    Private Sub btnLogin_MouseEnter(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnLogin.MouseEnter
+        btnLogin.BackColor = Me.BackColor
+    End Sub
+
+    Private Sub btnLogin_MouseLeave(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnLogin.MouseLeave
+        btnLogin.BackColor = Color.FromArgb(66, 103, 178)
+    End Sub
+
+    Private Sub btnLogin_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnLogin.Click
+        If MySQLConn.State = ConnectionState.Open Then
+            MySQLConn.Close()
+        End If
+
+        MySQLConn.ConnectionString = connstring
+        Try
+            MySQLConn.Open()
+            comm = New MySqlCommand("SELECT * FROM messages.accountlist WHERE username=sha2(@username, 512) and password=sha2(@password, 512);", MySQLConn)
+            comm.Parameters.AddWithValue("username", txtUsername.Text)
+            comm.Parameters.AddWithValue("password", txtPassword.Text)
+            reader = comm.ExecuteReader
+            Dim count As Integer
+            While reader.Read
+                count += 1
+            End While
+            MySQLConn.Close()
+            If count > 0 Then
+                Messages.Show()
+            Else
+                MsgBox("Incorrect credentials")
+            End If
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        Finally
+            MySQLConn.Dispose()
+        End Try
+
     End Sub
 End Class
