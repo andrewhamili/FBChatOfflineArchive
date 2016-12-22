@@ -68,6 +68,7 @@ Partial Class LoginForm
         Me.txtPassword.Size = New System.Drawing.Size(168, 27)
         Me.txtPassword.TabIndex = 3
         Me.txtPassword.Text = "Password"
+        Me.txtPassword.UseSystemPasswordChar = True
         '
         'btnLogin
         '
