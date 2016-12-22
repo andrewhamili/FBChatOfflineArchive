@@ -145,6 +145,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="fb2016.ico" />
+    <None Include="Resources\male_image.jpg" />
     <None Include="Resources\fb2016.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
